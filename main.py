@@ -33,12 +33,12 @@ async def print_jobs(channel):
     global jobs_found
     all_job_ids, jobs_responses = controller(jobs_found)
     jobs_found.update(all_job_ids)
-
     for job_id, response in jobs_responses:
         await channel.send(f"{response}\nhttps://www.linkedin.com/jobs/view/{job_id}")
 
-@tasks.loop(minutes=15)
+@tasks.loop(minutes=1)
 async def run_jobs_loop():
+    global jobs_found
     channel = bot.get_channel(1279745830659690598)
     asyncio.create_task(print_jobs(channel))
 

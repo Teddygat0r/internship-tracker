@@ -64,8 +64,8 @@ def fetch_job(job_id):
 def controller(all_done_listings):
     set1 = fetch_job_listings(filter="1")
     set2 = fetch_job_listings(keywords="software%20engineering%20intern")
-
-    all_job_ids = (set1 | set2 - all_done_listings)
+    all_job_ids = set1 | set2 
+    all_job_ids = all_job_ids - all_done_listings
     jobs_response = set()
     
     for i, job_id in enumerate(all_job_ids):
