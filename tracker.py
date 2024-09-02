@@ -17,8 +17,8 @@ def send_request_with_retries(url, retries=5, delay=5, timeout=5):
     print("All retries failed.")
     return None
 
-def fetch_job_listings(keywords="software%20engineer", refresh="1000"):
-    url = f"https://www.linkedin.com/jobs/search/?keywords={keywords}&f_TPR=r{refresh}"
+def fetch_job_listings(keywords="software%20engineer", refresh="2000", filter="0"):
+    url = f"https://www.linkedin.com/jobs/search/?keywords={keywords}&f_TPR=r{refresh}&f_E={filter}"
     response = send_request_with_retries(url)
     jobs = set()
 
@@ -60,17 +60,17 @@ def fetch_job(job_id):
     texts_join = u" ".join(t.get_text(separator=" ", strip=True) for t in container).lower()
 
     return soup.find('title').get_text() if "internship" in texts_join or "intern " in texts_join else None
-        
+
 def controller(all_done_listings):
-    set1 = fetch_job_listings()
+    set1 = fetch_job_listings(filter="1")
     set2 = fetch_job_listings(keywords="software%20engineering%20intern")
 
     all_job_ids = (set1 | set2 - all_done_listings)
     jobs_response = set()
-
-    for job_id in all_job_ids:
+    
+    for i, job_id in enumerate(all_job_ids):
         response = fetch_job(job_id)
-        print('run')
+        print(i,"/", len(all_job_ids), "run")
         if response:
             jobs_response.add((job_id, response))
     
